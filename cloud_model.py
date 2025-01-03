@@ -1,12 +1,13 @@
 from dataclasses import dataclass
-from typing import Iterable
 from dotenv import load_dotenv
 from enum import Enum
 from openai import OpenAI
+from openai.types.chat.chat_completion_user_message_param import ChatCompletionUserMessageParam
 from openai.types.chat.chat_completion import ChatCompletion
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 import os
+from typing import Iterable
 
 load_dotenv()
 
@@ -59,9 +60,9 @@ class CloudModel:
     def chat_completion(
         self,
         messages: Iterable[ChatCompletionMessageParam],
-        max_completion_tokens: int | None,
-        temperature: float | None,
-        tools: Iterable[ChatCompletionToolParam] | None,
+        max_completion_tokens: int | None = None,
+        temperature: float | None = None,
+        tools: Iterable[ChatCompletionToolParam] | None = None,
     ) -> ChatCompletion:
         return self.client.chat.completions.create(
             model = self.model,
@@ -72,3 +73,16 @@ class CloudModel:
             stream=False,
             n=1,
         )
+
+if __name__ == "__main__":
+    model = CloudModel(CloudModelOption.GPT4O_MINI)
+    messages = []
+    print("Enter 'q', 'quit', or 'exit' to end the conversation.")
+    while True:
+        prompt = input(">>> ")
+        if prompt in ["q", "quit", "exit"]:
+            break
+        messages.append(ChatCompletionUserMessageParam(role="user", content=prompt))
+        response = model.chat_completion(messages).choices[0].message
+        messages.append(response)
+        print(f"\033[36m{response.content}\033[0m")
