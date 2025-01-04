@@ -3,17 +3,18 @@ import json
 from typing import Literal
 from toolsmith import forge_tool
 
+
 class TestTool(unittest.TestCase):
 
     def test_simple_function(self):
         @forge_tool
         def add(a: int, b: int) -> int:
             """Adds two numbers.
-            
+
             Args:
                 a: The first number.
                 b: The second number.
-            
+
             Returns:
                 The sum of a and b.
             """
@@ -58,8 +59,14 @@ class TestTool(unittest.TestCase):
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "name": {"type": "string", "description": "The name of the person."},
-                        "greeting": {"type": "string", "description": "The greeting to use."},
+                        "name": {
+                            "type": "string",
+                            "description": "The name of the person.",
+                        },
+                        "greeting": {
+                            "type": "string",
+                            "description": "The greeting to use.",
+                        },
                     },
                     "required": ["name"],
                 },
@@ -91,7 +98,7 @@ class TestTool(unittest.TestCase):
         }
         self.assertEqual(tool.json, expected_json)
         self.assertEqual(tool(a=2, b=4), "8")
-        
+
     def test_function_with_no_parameters(self):
         @forge_tool
         def get_hello() -> str:
@@ -103,7 +110,7 @@ class TestTool(unittest.TestCase):
             "type": "function",
             "function": {
                 "name": "get_hello",
-                "description": "Returns the string 'hello'."
+                "description": "Returns the string 'hello'.",
             },
         }
         self.assertEqual(tool.json, expected_json)
@@ -145,17 +152,20 @@ class TestTool(unittest.TestCase):
         @forge_tool
         def my_function():
             pass
+
         tool = my_function
         self.assertEqual(tool.name, "my_function")
-        
+
     def test_str_representation(self):
         @forge_tool
         def my_function():
             """This is a test function."""
             pass
+
         tool = my_function
         expected_str = json.dumps(tool.json, indent=4)
         self.assertEqual(str(tool), expected_str)
+
 
 if __name__ == "__main__":
     unittest.main()

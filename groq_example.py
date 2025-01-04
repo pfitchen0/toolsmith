@@ -1,6 +1,5 @@
 import json
 from typing import Callable
-import docstring_parser
 from dotenv import load_dotenv
 import os
 import json
@@ -10,7 +9,7 @@ from toolsmith import forge_tool
 
 load_dotenv()
 
-MODEL = "llama3-8b-8192"
+MODEL = "llama-3.3-70b-versatile"
 
 
 class Agent:
@@ -81,7 +80,7 @@ class Agent:
         }
         string = ""
         for message in self.messages:
-            color = role_to_color.get(message['role'], 'red')
+            color = role_to_color.get(message["role"], "red")
             string += f"\n\033[{color}m{str(message)}\033[0m\n"
         return string
 
