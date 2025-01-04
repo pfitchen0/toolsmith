@@ -1,11 +1,10 @@
 import json
-from typing import Callable
 from dotenv import load_dotenv
 import os
 import json
 from groq import Groq
 
-from toolsmith import forge_tool
+from toolsmith import forge_tool, Tool
 
 load_dotenv()
 
@@ -17,13 +16,12 @@ class Agent:
         self,
         client: Groq,
         model: str = MODEL,
-        system_prompt: str = None,
-        tools: list[Callable] = None,
+        system_prompt: str | None = None,
+        tools: list[Tool] | None = None,
     ):
         self.client = client
         self.model = model
         self.messages = []
-        tools = [forge_tool(tool) for tool in tools]
         self.tools = {tool.name: tool for tool in tools}
         if system_prompt:
             self.messages.append({"role": "system", "content": system_prompt})
@@ -69,9 +67,6 @@ class Agent:
         return response
 
     def __str__(self):
-        print("---------------------")
-        print("| Messages history: |")
-        print("---------------------")
         role_to_color = {
             "system": 33,
             "user": 0,
@@ -87,8 +82,9 @@ class Agent:
 
 if __name__ == "__main__":
     client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-    system_prompt = """You are a helpful assistant who has access to a calculator via the calculate function."""
+    system_prompt = """You are a helpful math assistant who has access to a calculate function."""
 
+    @forge_tool
     def calculate(expression: str) -> str:
         """Evaluate a mathematical expression"""
         try:
