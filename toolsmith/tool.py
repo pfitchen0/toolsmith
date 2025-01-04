@@ -70,13 +70,3 @@ class Tool:
 
 def forge_tool(function: Callable) -> Tool:
     return Tool(function=function)
-
-
-if __name__ == "__main__":
-
-    @forge_tool
-    def add_two_numbers(a, b):
-        return a + b
-
-    print(add_two_numbers)
-    print(add_two_numbers(a=5, b=7))
