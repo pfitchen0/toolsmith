@@ -82,7 +82,9 @@ class Agent:
 
 if __name__ == "__main__":
     client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-    system_prompt = """You are a helpful math assistant who has access to a calculate function."""
+    system_prompt = (
+        """You are a helpful math assistant who has access to a calculate function."""
+    )
 
     @forge_tool
     def calculate(expression: str) -> str:
